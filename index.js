@@ -65,6 +65,25 @@ app.delete("/cars/:id", (req, res) => {
   }
 });
 
+//Update an existing data by post method
+app.post("/cars/:id", (req, res) => {
+  const carId = parseInt(req.params.id);
+  const updatedCarData = req.body;
+
+  const carToUpdate = cars.find((car) => car.id === carId);
+
+  if (!carToUpdate) {
+    res.status(404).json({ error: "Car not found" });
+  } else {
+    if (!updatedCarData.make || !updatedCarData.model || !updatedCarData.year) {
+      res.status(400).json({ error: "Make, Model and Year are required." });
+    } else {
+      Object.assign(carToUpdate, updatedCarData);
+      res.status(200).json({ message: "Car data updated successfully" });
+    }
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port, ${PORT}`);
